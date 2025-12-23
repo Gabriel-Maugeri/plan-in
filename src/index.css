@@ -1,0 +1,127 @@
+@import 'tailwindcss';
+
+* {
+  font-family: 'Noto Sans', sans-serif;
+}
+
+body {
+  font-family: 'Noto Sans', sans-serif;
+}
+
+/* Estilos para react-pivottable */
+.pvtUi {
+  font-family: 'Noto Sans', sans-serif;
+  width: 100%;
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+}
+
+
+.pvtTable {
+  font-size: 0.875rem;
+  width: 100%;
+}
+
+
+.pvtTable thead tr th,
+.pvtTable tbody tr th {
+  background-color: #f3f4f6;
+  border: 1px solid #e9eaef;
+  padding: 8px;
+  font-weight: 500;
+}
+
+.pvtTable tbody tr td {
+  border: 1px solid #e5e7eb;
+  padding: 8px;
+  text-align: right;
+}
+
+/* Ocultar dropdowns de aggregator y renderer en react-pivottable */
+.pvtRenderers,
+.pvtAxisContainer select {
+  pointer-events:none !important;
+  opacity: 0 !important;
+  border: none !important;
+  max-width: 0px !important;
+  display: none !important;
+}
+
+.pvtVals {
+  border: none !important;
+  border-left: 1px solid #e9eaef !important;
+}
+
+.pvtVals * {
+  display: none !important;
+}
+
+/* Hacer pvtAttr clickeable y agregar hover */
+.pvtAttr {
+  cursor: grab !important;
+  transition: background-color 0.2s;
+  user-select: none;
+  background-color: #FAFAFA !important;
+}
+
+.pvtAttr:active {
+  cursor: grabbing !important;
+}
+
+.pvtAttr:hover {
+  background-color: #e5e7eb !important;
+}
+
+/* Estilo para campos con filtros activos */
+.pvtAttr.filtered-field {
+  background-color: #dbeafe !important;
+  border: 2px solid #3b82f6 !important;
+  font-weight: 600 !important;
+  position: relative;
+}
+
+.pvtAttr.filtered-field::after {
+  content: "●";
+  color: #3b82f6;
+  font-size: 10px;
+  position: absolute;
+  top: 2px;
+  right: 4px;
+}
+
+.pvtOutput {
+  width: 100%;
+}
+
+.pvtUnused {
+  border: 1px solid #e9eaef !important;
+  border-radius: 16px 16px 0 0 !important;
+  overflow: hidden !important;
+}
+
+.pvtRows  {
+  border: 1px solid #e9eaef !important;
+  border-right: none !important;
+  border-radius: 0 0 0 16px !important;
+  overflow: hidden !important;
+}
+
+.pvtCols {
+  border: 1px solid #e9eaef !important;
+  border-top: none !important;
+  border-bottom: none !important;
+}
+
+.pvtOutput {
+  border: 1px solid #e9eaef !important;
+  border-top: none !important;
+  border-left: none !important;
+  border-radius: 0 0 16px 0 !important;
+  overflow: hidden !important;
+}
+
+.pvtOutput .pvtTable {
+  margin: 0px !important;
+}
+
+
