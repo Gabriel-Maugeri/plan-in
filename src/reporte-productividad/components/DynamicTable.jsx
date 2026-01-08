@@ -215,12 +215,14 @@ const DynamicTable = forwardRef(({ onPivotChange: onPivotChangeCallback }, ref) 
     setLoading(true);
     try {
       const filters = getFiltersForAPI();
-      const result = await reportsAPI.getProductivity(filters);
+      const response = await reportsAPI.getProductivity(filters);
       
-      // Si hay datos, usarlos; si no, usar estructura vacía
-      const tableData = result.length > 0 ? result : [emptyDataStructure];
+      // Handle new response structure with request and result fields
+      const tableData = response.result && response.result.length > 0 ? response.result : [emptyDataStructure];
       setRawData(tableData);
-      // data se actualizará automáticamente por el useEffect de filtrado
+      
+      // Return the response so the parent can use request data for filter population
+      return response;
     } catch (error) {
       console.error('Error al cargar datos:', error);
     } finally {

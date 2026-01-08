@@ -201,6 +201,36 @@ export const securityAPI = {
     return response.json();
   },
 
+  recoverPassword: async (emailData) => {
+    const response = await fetch(
+      `${import.meta.env.VITE_API_SECURITY_URL}/security/recover-password`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(emailData),
+      }
+    );
+    if (!response.ok) throw new Error("Error al recuperar contraseña");
+    return response.json();
+  },
+
+  resendVerificationEmail: async (emailData) => {
+    const response = await fetch(
+      `${import.meta.env.VITE_API_SECURITY_URL}/security/resend-verification`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(emailData),
+      }
+    );
+    if (!response.ok) throw new Error("Error al reenviar verificación");
+    return response.json();
+  },
+
   logout: async () => {
     const response = await fetch(
       `${import.meta.env.VITE_API_SECURITY_URL}/security/log-out`,
@@ -242,7 +272,7 @@ export const reportsAPI = {
     }
 
     const response = await fetch(
-      `${import.meta.env.VITE_API_REPORTS_URL}/reports/productidad`,
+      `${import.meta.env.VITE_API_REPORTS_URL}/reports/productivity`,
       {
         method: "POST",
         headers: getHeaders(),
@@ -251,20 +281,6 @@ export const reportsAPI = {
     );
     
     if (!response.ok) throw new Error("Error al obtener datos de productividad");
-    return response.json();
-  },
-};
-
-export const labelsAPI = {
-  getAll: async () => {
-    const response = await fetch(
-      `${import.meta.env.VITE_API_ABMS_URL}/labels`,
-      {
-        method: "GET",
-        headers: getHeaders(),
-      }
-    );
-    if (!response.ok) throw new Error("Error al obtener etiquetas");
     return response.json();
   },
 };
@@ -327,5 +343,371 @@ export const viewsAPI = {
     );
     if (!response.ok) throw new Error("Error al eliminar vista");
     return response.ok;
+  },
+};
+
+export const vatTypesAPI = {
+  getAll: async () => {
+    const response = await fetch(
+      `${import.meta.env.VITE_API_ABMS_URL}/vat-types`,
+      {
+        method: "GET",
+        headers: getHeaders(),
+      }
+    );
+    if (!response.ok) throw new Error("Error al obtener tipos de IVA");
+    return response.json();
+  },
+
+  create: async (labelData) => {
+    const response = await fetch(
+      `${import.meta.env.VITE_API_ABMS_URL}/labels`,
+      {
+        method: "POST",
+        headers: getHeaders(),
+        body: JSON.stringify(labelData),
+      }
+    );
+    if (!response.ok) throw new Error("Error al crear etiqueta");
+    return response.json();
+  },
+
+  update: async (labelId, labelData) => {
+    const response = await fetch(
+      `${import.meta.env.VITE_API_ABMS_URL}/labels/${labelId}`,
+      {
+        method: "PUT",
+        headers: getHeaders(),
+        body: JSON.stringify(labelData),
+      }
+    );
+    if (!response.ok) throw new Error("Error al actualizar etiqueta");
+    return response.ok;
+  },
+
+  delete: async (labelId) => {
+    const response = await fetch(
+      `${import.meta.env.VITE_API_ABMS_URL}/labels/${labelId}`,
+      {
+        method: "DELETE",
+        headers: getHeaders(),
+      }
+    );
+    if (!response.ok) throw new Error("Error al eliminar etiqueta");
+    return response.ok;
+  },
+};
+
+export const contactsAPI = {
+  getAll: async () => {
+    const response = await fetch(
+      `${import.meta.env.VITE_API_ABMS_URL}/contacts?includeClients=true`,
+      {
+        method: "GET",
+        headers: getHeaders(),
+      }
+    );
+    if (!response.ok) throw new Error("Error al obtener contactos");
+    return response.json();
+  },
+
+  create: async (contactData) => {
+    const response = await fetch(
+      `${import.meta.env.VITE_API_ABMS_URL}/contacts`,
+      {
+        method: "POST",
+        headers: getHeaders(),
+        body: JSON.stringify(contactData),
+      }
+    );
+    if (!response.ok) throw new Error("Error al crear contacto");
+    return response.json();
+  },
+
+  update: async (contactId, contactData) => {
+    const response = await fetch(
+      `${import.meta.env.VITE_API_ABMS_URL}/contacts/${contactId}`,
+      {
+        method: "PATCH",
+        headers: getHeaders(),
+        body: JSON.stringify(contactData),
+      }
+    );
+    if (!response.ok) throw new Error("Error al actualizar contacto");
+    return response.json();
+  },
+
+  delete: async (contactId) => {
+    const response = await fetch(
+      `${import.meta.env.VITE_API_ABMS_URL}/contacts/${contactId}`,
+      {
+        method: "DELETE",
+        headers: getHeaders(),
+      }
+    );
+    if (!response.ok) throw new Error("Error al eliminar contacto");
+    return response.ok;
+  },
+
+  associateClient: async (contactId, clientId) => {
+    const response = await fetch(
+      `${import.meta.env.VITE_API_ABMS_URL}/contacts/${contactId}/clients/${clientId}`,
+      {
+        method: "PUT",
+        headers: getHeaders(),
+      }
+    );
+    if (!response.ok) throw new Error("Error al asociar cliente");
+    return response.ok;
+  },
+
+  disassociateClient: async (contactId, clientId) => {
+    const response = await fetch(
+      `${import.meta.env.VITE_API_ABMS_URL}/contacts/${contactId}/clients/${clientId}`,
+      {
+        method: "DELETE",
+        headers: getHeaders(),
+      }
+    );
+    if (!response.ok) throw new Error("Error al desasociar cliente");
+    return response.ok;
+  },
+
+  getClients: async (contactId) => {
+    const response = await fetch(
+      `${import.meta.env.VITE_API_ABMS_URL}/contacts/${contactId}/clients`,
+      {
+        method: "GET",
+        headers: getHeaders(),
+      }
+    );
+    if (!response.ok) throw new Error("Error al obtener clientes del contacto");
+    return response.json();
+  },
+};
+
+export const clientesAPI = {
+  getAll: async () => {
+    const response = await fetch(
+      `${import.meta.env.VITE_API_ABMS_URL}/clients`,
+      {
+        method: "GET",
+        headers: getHeaders(),
+      }
+    );
+    if (!response.ok) throw new Error("Error al obtener clientes");
+    return response.json();
+  },
+
+  getContacts: async (clientId) => {
+    const response = await fetch(
+      `${import.meta.env.VITE_API_ABMS_URL}/clients/${clientId}/contacts`,
+      {
+        method: "GET",
+        headers: getHeaders(),
+      }
+    );
+    if (!response.ok) throw new Error("Error al obtener contactos del cliente");
+    return response.json();
+  },
+
+  create: async (clientData) => {
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_ABMS_URL}/clients`,
+        {
+          method: "POST",
+          headers: getHeaders(),
+          body: JSON.stringify(clientData),
+        }
+      );
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.title || "Error al crear cliente");
+      }
+      return response.json();
+    } catch (error) {
+      console.error("Error en create cliente:", error);
+      throw error;
+    }
+  },
+
+  update: async (clientId, clientData) => {
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_ABMS_URL}/clients/${clientId}`,
+        {
+          method: "PUT",
+          headers: getHeaders(),
+          body: JSON.stringify(clientData),
+        }
+      );
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.title || "Error al actualizar cliente");
+      }
+      const text = await response.text();
+      return text ? JSON.parse(text) : null;
+    } catch (error) {
+      console.error("Error en update cliente:", error);
+      throw error;
+    }
+  },
+
+  enable: async (clientId) => {
+    const response = await fetch(
+      `${import.meta.env.VITE_API_ABMS_URL}/clients/${clientId}/enable`,
+      {
+        method: "PATCH",
+        headers: getHeaders(),
+      }
+    );
+    if (!response.ok) throw new Error("Error al activar cliente");
+    return response.ok;
+  },
+
+  disable: async (clientId) => {
+    const response = await fetch(
+      `${import.meta.env.VITE_API_ABMS_URL}/clients/${clientId}/disable`,
+      {
+        method: "PATCH",
+        headers: getHeaders(),
+      }
+    );
+    if (!response.ok) throw new Error("Error al desactivar cliente");
+    return response.ok;
+  },
+
+  delete: async (clientId) => {
+    const response = await fetch(
+      `${import.meta.env.VITE_API_ABMS_URL}/clients/${clientId}`,
+      {
+        method: "DELETE",
+        headers: getHeaders(),
+      }
+    );
+    if (!response.ok) throw new Error("Error al eliminar cliente");
+    return response.ok;
+  },
+
+  getMainContact: async (clientId) => {
+    const response = await fetch(
+      `${import.meta.env.VITE_API_ABMS_URL}/clients/${clientId}/contacts/main`,
+      {
+        method: "GET",
+        headers: getHeaders(),
+      }
+    );
+    if (!response.ok) throw new Error("Error al obtener contacto principal");
+    return response.json();
+  },
+};
+
+export const labelsAPI = {
+  getAll: async () => {
+    const response = await fetch(
+      `${import.meta.env.VITE_API_ABMS_URL}/labels`,
+      {
+        method: "GET",
+        headers: getHeaders(),
+      }
+    );
+    if (!response.ok) throw new Error("Error al obtener etiquetas");
+    return response.json();
+  },
+
+  getById: async (id) => {
+    const response = await fetch(
+      `${import.meta.env.VITE_API_ABMS_URL}/labels/${id}`,
+      {
+        method: "GET",
+        headers: getHeaders(),
+      }
+    );
+    if (!response.ok) throw new Error("Error al obtener etiqueta");
+    return response.json();
+  },
+};
+
+export const legalEntityTypesAPI = {
+  getAll: async () => {
+    const response = await fetch(
+      `${import.meta.env.VITE_API_ABMS_URL}/legal-entity-types`,
+      {
+        method: "GET",
+        headers: getHeaders(),
+      }
+    );
+    if (!response.ok) throw new Error("Error al obtener tipos societarios");
+    return response.json();
+  },
+};
+
+export const fiscalJurisdictionsAPI = {
+  getAll: async () => {
+    const response = await fetch(
+      `${import.meta.env.VITE_API_ABMS_URL}/fiscal-jurisdictions`,
+      {
+        method: "GET",
+        headers: getHeaders(),
+      }
+    );
+    if (!response.ok) throw new Error("Error al obtener jurisdicciones");
+    return response.json();
+  },
+};
+
+export const fiscalActivitiesAPI = {
+  getAll: async () => {
+    const response = await fetch(
+      `${import.meta.env.VITE_API_ABMS_URL}/fiscal-activities`,
+      {
+        method: "GET",
+        headers: getHeaders(),
+      }
+    );
+    if (!response.ok) throw new Error("Error al obtener actividades fiscales");
+    return response.json();
+  },
+};
+
+export const paymentPlatformAPI = {
+  getAll: async () => {
+    const response = await fetch(
+      `${import.meta.env.VITE_API_ABMS_URL}/payment-platform`,
+      {
+        method: "GET",
+        headers: getHeaders(),
+      }
+    );
+    if (!response.ok) throw new Error("Error al obtener plataformas de pago");
+    return response.json();
+  },
+};
+
+export const studyAPI = {
+  get: async () => {
+    const response = await fetch(
+      `${import.meta.env.VITE_API_ABMS_URL}/study`,
+      {
+        method: "GET",
+        headers: getHeaders(),
+      }
+    );
+    if (!response.ok) throw new Error("Error al obtener datos del estudio");
+    return response.json();
+  },
+
+  update: async (studyData) => {
+    const response = await fetch(
+      `${import.meta.env.VITE_API_ABMS_URL}/study`,
+      {
+        method: "PUT",
+        headers: getHeaders(),
+        body: JSON.stringify(studyData),
+      }
+    );
+    if (!response.ok) throw new Error("Error al actualizar datos del estudio");
+    return response.json();
   },
 };

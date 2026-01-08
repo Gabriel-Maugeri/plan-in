@@ -6,10 +6,12 @@ const FiltersContext = createContext(null);
 export const FiltersProvider = ({ children }) => {
   // Filtros disponibles
   const [selectedLabels, setSelectedLabels] = useState([]);
+  const [availableLabels, setAvailableLabels] = useState([]);
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [unitOfMeasure, setUnitOfMeasure] = useState(UNIT_OF_MEASURE.MINUTES);
   const [searchTerm, setSearchTerm] = useState('');
+  const [labelsLoaded, setLabelsLoaded] = useState(false);
 
   /**
    * Resetea todos los filtros a sus valores por defecto
@@ -50,16 +52,20 @@ export const FiltersProvider = ({ children }) => {
   const value = {
     // Estado
     selectedLabels,
+    availableLabels,
     startDate,
     endDate,
     unitOfMeasure,
     searchTerm,
+    labelsLoaded,
     // Setters individuales
     setSelectedLabels,
+    setAvailableLabels,
     setStartDate,
     setEndDate,
     setUnitOfMeasure,
     setSearchTerm,
+    setLabelsLoaded,
     // Acciones
     resetFilters,
     updateFilters,

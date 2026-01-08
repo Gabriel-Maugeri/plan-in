@@ -17,6 +17,8 @@ function FiltersBar({ onSearch }) {
     setStartDate,
     setEndDate,
     setUnitOfMeasure,
+    setLabelsLoaded,
+    setAvailableLabels,
   } = useFilters();
 
   const [labels, setLabels] = useState([]);
@@ -38,14 +40,13 @@ function FiltersBar({ onSearch }) {
       }));
       
       setLabels(labelOptions);
-      
-      // Seleccionar todas las etiquetas por defecto
-      const allLabelIds = labelOptions.map(opt => opt.value);
-      setSelectedLabels(allLabelIds);
+      setAvailableLabels(labelOptions.map(opt => opt.value));
+      setLabelsLoaded(true);
     } catch (error) {
       console.error('Error al cargar etiquetas:', error);
       setLabels([]);
-      setSelectedLabels([]);
+      setAvailableLabels([]);
+      setLabelsLoaded(false);
     } finally {
       setLoadingLabels(false);
     }

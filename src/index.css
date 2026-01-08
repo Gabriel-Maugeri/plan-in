@@ -50,6 +50,8 @@ body {
 .pvtVals {
   border: none !important;
   border-left: 1px solid #e9eaef !important;
+  border-top: 1px solid #e9eaef !important;
+  border-radius: 16px 0 0 0 !important;
 }
 
 .pvtVals * {
@@ -94,9 +96,10 @@ body {
 }
 
 .pvtUnused {
-  border: 1px solid #e9eaef !important;
-  border-radius: 16px 16px 0 0 !important;
+  background-color: #FAFAFA !important;
+  border: none !important;
   overflow: hidden !important;
+  padding-bottom: 8px !important;
 }
 
 .pvtRows  {
@@ -108,8 +111,8 @@ body {
 
 .pvtCols {
   border: 1px solid #e9eaef !important;
-  border-top: none !important;
   border-bottom: none !important;
+  border-radius: 0 16px 0 0 !important;
 }
 
 .pvtOutput {

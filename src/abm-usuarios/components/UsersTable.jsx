@@ -257,11 +257,11 @@ function UsersTable() {
     }
 
     return(
-        <div className="p-6">
-            <table className="w-full">
+        <div className="p-6 w-full">
+            <table className="w-full table-auto">
             <thead>
                 <tr className="bg-[#424242] text-white text-left rounded-t-3xl">
-                    <th className="font-normal rounded-tl-3xl p-4">
+                    <th className="font-normal rounded-tl-3xl p-4 min-w-[150px]">
                         <button 
                             onClick={() => handleSort('nombreApellido')}
                             className="flex items-center hover:opacity-80"
@@ -270,7 +270,7 @@ function UsersTable() {
                             {getSortIcon('nombreApellido')}
                         </button>
                     </th>
-                    <th className="font-normal p-4">
+                    <th className="font-normal p-4 min-w-[120px]">
                         <button 
                             onClick={() => handleSort('usuario')}
                             className="flex items-center hover:opacity-80"
@@ -279,7 +279,7 @@ function UsersTable() {
                             {getSortIcon('usuario')}
                         </button>
                     </th>
-                    <th className="font-normal p-4">
+                    <th className="font-normal p-4 min-w-[100px]">
                         <button 
                             onClick={() => handleSort('rol')}
                             className="flex items-center hover:opacity-80"
@@ -288,7 +288,7 @@ function UsersTable() {
                             {getSortIcon('rol')}
                         </button>
                     </th>
-                    <th className="font-normal p-4">
+                    <th className="font-normal p-4 min-w-[100px]">
                         <button 
                             onClick={() => handleSort('seniority')}
                             className="flex items-center hover:opacity-80"
@@ -297,7 +297,7 @@ function UsersTable() {
                             {getSortIcon('seniority')}
                         </button>
                     </th>
-                    <th className="font-normal p-4">
+                    <th className="font-normal p-4 min-w-[150px]">
                         <button 
                             onClick={() => handleSort('nivelOrganigrama')}
                             className="flex items-center hover:opacity-80"
@@ -306,7 +306,7 @@ function UsersTable() {
                             {getSortIcon('nivelOrganigrama')}
                         </button>
                     </th>
-                    <th className="font-normal p-4">
+                    <th className="font-normal p-4 min-w-[180px]">
                         <button 
                             onClick={() => handleSort('correoUsuario')}
                             className="flex items-center hover:opacity-80"
@@ -315,7 +315,7 @@ function UsersTable() {
                             {getSortIcon('correoUsuario')}
                         </button>
                     </th>
-                    <th className="font-normal p-4">
+                    <th className="font-normal p-4 min-w-[180px]">
                         <button 
                             onClick={() => handleSort('correoEnvios')}
                             className="flex items-center hover:opacity-80"
@@ -324,7 +324,7 @@ function UsersTable() {
                             {getSortIcon('correoEnvios')}
                         </button>
                     </th>
-                    <th className="font-normal p-4 rounded-tr-3xl">Acciones</th>
+                    <th className="font-normal p-4 rounded-tr-3xl min-w-[100px]">Acciones</th>
                 </tr>
             </thead>
             <tbody>

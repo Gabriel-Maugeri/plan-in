@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Encryption</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
+</head>
+<body>
+    <h1>Test Password Encryption</h1>
+    <input type="text" id="password" placeholder="Enter password" value="test123">
+    <button onclick="testEncrypt()">Encrypt</button>
+    <div>
+        <h3>Encrypted Result:</h3>
+        <pre id="result"></pre>
+        <h3>Key (SHA256):</h3>
+        <pre id="keyDisplay"></pre>
+        <h3>IV:</h3>
+        <pre id="ivDisplay"></pre>
+    </div>
+
+    <script>
+        const ENCRYPTION_PASSWORD = 'MiClaveSuperSecreta';
+        const ENCRYPTION_IV = 'AbcD$1234@8765$H';
+
+        function testEncrypt() {
+            const password = document.getElementById('password').value;
+            
+            const key = CryptoJS.SHA256(ENCRYPTION_PASSWORD);
+            const iv = CryptoJS.enc.Utf8.parse(ENCRYPTION_IV.substring(0, 16).padEnd(16, '0'));
+            
+            const encrypted = CryptoJS.AES.encrypt(password, key, {
+                iv: iv,
+                mode: CryptoJS.mode.CBC,
+                padding: CryptoJS.pad.Pkcs7
+            });
+            
+            const ciphertextOnly = encrypted.ciphertext.toString(CryptoJS.enc.Base64);
+            
+            document.getElementById('result').textContent = 
+                'Full (with metadata): ' + encrypted.toString() + '\n\n' +
+                'Ciphertext only (Base64): ' + ciphertextOnly;
+            document.getElementById('keyDisplay').textContent = key.toString();
+            document.getElementById('ivDisplay').textContent = iv.toString();
+            
+            console.log('Password:', password);
+            console.log('Encrypted (full):', encrypted.toString());
+            console.log('Encrypted (ciphertext only):', ciphertextOnly);
+            console.log('Key:', key.toString());
+            console.log('IV:', iv.toString());
+        }
+    </script>
+</body>
+</html>

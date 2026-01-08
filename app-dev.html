@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plan-In - Aplicación (DEV)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-title {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .header-user {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .user-name {
+            font-size: 14px;
+        }
+
+        .logout-button {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+
+        .logout-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .iframe-container {
+            width: 100%;
+            height: calc(100vh - 64px);
+            position: relative;
+        }
+
+        .iframe-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #f5f5f5;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .loading-overlay.hidden {
+            display: none;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #e0e0e0;
+            border-top-color: #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            margin-top: 20px;
+            color: #666;
+            font-size: 16px;
+        }
+
+        .nav-tabs {
+            background: white;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 0 24px;
+            display: flex;
+            gap: 8px;
+        }
+
+        .nav-tab {
+            padding: 12px 20px;
+            background: none;
+            border: none;
+            border-bottom: 3px solid transparent;
+            color: #666;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .nav-tab:hover {
+            color: #667eea;
+            background: #f5f5f5;
+        }
+
+        .nav-tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-title">Plan-In (DEV)</div>
+        <div class="header-user">
+            <span class="user-name" id="userName">Usuario</span>
+            <button class="logout-button" onclick="logout()">Cerrar Sesión</button>
+        </div>
+    </div>
+
+    <div class="nav-tabs">
+        <button class="nav-tab active" onclick="navigateTo('/abm/usuarios')">ABM Usuarios</button>
+        <button class="nav-tab" onclick="navigateTo('/abm/contactos')">ABM Contactos</button>
+        <button class="nav-tab" onclick="navigateTo('/abm/clientes')">ABM Clientes</button>
+        <button class="nav-tab" onclick="navigateTo('/reporte/productividad')">Reporte Productividad</button>
+    </div>
+
+    <div class="iframe-container">
+        <div class="loading-overlay" id="loadingOverlay">
+            <div class="spinner"></div>
+            <div class="loading-text">Cargando aplicación...</div>
+        </div>
+        <iframe id="appIframe" src="" title="Plan-In Application"></iframe>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('auth') || localStorage.getItem('token');
+        const iframe = document.getElementById('appIframe');
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        const userNameElement = document.getElementById('userName');
+
+        // URL del dev server
+        const DEV_SERVER = 'http://localhost:5173';
+
+        if (!token) {
+            window.location.href = 'login.html';
+        } else {
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            if (user.name) {
+                userNameElement.textContent = user.name;
+            }
+
+            const currentPath = sessionStorage.getItem('currentPath') || '/abm/usuarios';
+            navigateTo(currentPath);
+
+            iframe.addEventListener('load', () => {
+                setTimeout(() => {
+                    loadingOverlay.classList.add('hidden');
+                }, 500);
+            });
+
+            // Ocultar loading después de 3 segundos incluso si no carga
+            setTimeout(() => {
+                loadingOverlay.classList.add('hidden');
+            }, 3000);
+        }
+
+        function navigateTo(path) {
+            loadingOverlay.classList.remove('hidden');
+            
+            const tabs = document.querySelectorAll('.nav-tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            const activeTab = Array.from(tabs).find(tab => 
+                tab.textContent.toLowerCase().includes(path.split('/').pop())
+            );
+            if (activeTab) {
+                activeTab.classList.add('active');
+            }
+
+            sessionStorage.setItem('currentPath', path);
+            
+            // Para desarrollo: apunta directamente al dev server
+            iframe.src = `${DEV_SERVER}/#${path}?auth=${token}`;
+        }
+
+        function logout() {
+            if (confirm('¿Estás seguro que deseas cerrar sesión?')) {
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                sessionStorage.removeItem('currentPath');
+                window.location.href = 'login.html';
+            }
+        }
+
+        window.addEventListener('message', (event) => {
+            if (event.data && event.data.type === 'navigate') {
+                navigateTo(event.data.path);
+            }
+        });
+    </script>
+</body>
+</html>

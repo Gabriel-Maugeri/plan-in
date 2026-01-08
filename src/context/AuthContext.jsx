@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { securityAPI } from '../services/api';
+import { encryptPassword } from '../utils/encryption';
 
 const AuthContext = createContext(null);
 
@@ -34,7 +35,35 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (credentials) => {
     try {
-      const response = await securityAPI.authenticate(credentials);
+      const encryptedPassword = encryptPassword(credentials.password);
+      
+      const encryptedCredentials = {
+        documentNumber: credentials.documentNumber,
+        userName: credentials.userName,
+        passwordHash: encryptedPassword,
+        forceSingIn: credentials.forceSingIn
+      };
+      
+      const response = await securityAPI.authenticate(encryptedCredentials);
+      
+      // Check for password expired scenario (temporary - API response structure TBD)
+      if (response.passwordExpired || response.status === 'PASSWORD_EXPIRED') {
+        return { 
+          success: false, 
+          passwordExpired: true,
+          error: 'Contraseña vencida'
+        };
+      }
+      
+      // Check for email not verified scenario (temporary - API response structure TBD)
+      if (response.emailNotVerified || response.status === 'EMAIL_NOT_VERIFIED') {
+        return { 
+          success: false, 
+          emailNotVerified: true,
+          email: response.email || response.emailAddress || '',
+          error: 'Email no verificado'
+        };
+      }
       
       const tokenValue = response.tokenAccess;
       

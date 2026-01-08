@@ -27,9 +27,11 @@ function ABMUsuarios() {
 
   return (
     <FilterProvider>
-      <div className="flex flex-col">
+      <div className="flex flex-col h-screen overflow-hidden">
         <Header />
-        <UsersTable />
+        <div className="flex-1 overflow-auto">
+          <UsersTable />
+        </div>
       </div>
     </FilterProvider>
   );
